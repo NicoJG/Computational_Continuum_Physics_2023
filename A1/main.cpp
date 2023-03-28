@@ -39,9 +39,7 @@ int main()
 
     for (int n=1; n<N; n++) {
 
-        // Save values for Murs absorbing boundary condition
-
-        // FD step
+        // FD step E
         double E_old = E[1];
         E.tail(M-1) = E.tail(M-1) - (tau/h) * (B.tail(M-1) - B.head(M-1));
         
@@ -55,6 +53,7 @@ int main()
         double omega = 10; 
         E[0] = A*sin(omega*n*tau);
 
+        // FD step B
         double B_old = B[M-2];
         B.head(M-1) = B.head(M-1) - (tau/h) * (E.tail(M-1) - E.head(M-1));
         

@@ -14,8 +14,8 @@ int main()
     double x_min = -1.;
     double x_max = 1.;
 
-    int N = 2000; // number of timesteps
-    int M = 500; // number of spacesteps
+    int N = 4000; // number of timesteps
+    int M = 1000; // number of spacesteps
     
     double h = (x_max - x_min) / (M - 0.5);
     double tau = 0.5*h;
@@ -30,8 +30,8 @@ int main()
     ArrayXd x_B = ArrayXd::LinSpaced(M, x_min+0.5*h, x_min+(M-0.5)*h);
 
     // initial conditions:
-    E = (abs(x_E) < 0.1).select(sin(20 * M_PI * x_E), 0 * x_E);
-    B = (abs(x_B) < 0.1).select(sin(20 * M_PI * x_B), 0 * x_B);
+    E = (abs(x_E) < 0.3).select(exp(-x_E*x_E/(2*0.1*0.1))*sin(20 * M_PI * x_E), 0 * x_E);
+    B = (abs(x_B) < 0.3).select(exp(-x_B*x_B/(2*0.1*0.1))*sin(20 * M_PI * x_B), 0 * x_B);
 
     // save initial conditions to the output matrix
     E_arr.row(0) = E;
@@ -43,22 +43,19 @@ int main()
         B.head(M-1) = B.head(M-1) - (tau/h) * (E.tail(M-1) - E.head(M-1));
 
         // reflective boundary conditions
-        //E.head(0) = 0;
-        //B.tail(0) = 0;
+        E.head(0) = 0;
+        B.tail(0) = 0;
         
         // dampening boundary conditions (Z = 1)
-        E.head(0) = B.head(0);
-        B.tail(0) = E.tail(0);
+        // E.head(0) =  B.head(0);
+        // B.tail(0) = -E.tail(0);
 
         // save the current timestep
         E_arr.row(n) = E;
         B_arr.row(n) = B;
     }
 
-    cout << E << endl;
-    cout << B << endl;
-
-    ofstream file("output_E.csv");
+    ofstream file("data/output_E.csv");
     if (file.is_open())
     {
         file << "# E field\n";
@@ -66,7 +63,7 @@ int main()
     }
     file.close();
 
-    file = ofstream("output_B.csv");
+    file = ofstream("data/output_B.csv");
     if (file.is_open())
     {
         file << "# B field\n";

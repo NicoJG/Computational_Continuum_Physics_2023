@@ -1,11 +1,11 @@
 # %%
 import numpy as np
 import matplotlib.pyplot as plt
-from tqdm.auto import tqdm
+import matplotlib.animation as animation 
 
 # %%
-E_arr = np.genfromtxt("output_E.csv")
-B_arr = np.genfromtxt("output_B.csv")
+E_arr = np.genfromtxt("data/output_E.csv")
+B_arr = np.genfromtxt("data/output_B.csv")
 
 x_min = -1
 x_max = 1
@@ -19,23 +19,32 @@ x_E = np.linspace(x_min,       x_min + (M-1.0)*h, M)
 x_B = np.linspace(x_min+0.5*h, x_min + (M-0.5)*h, M)
 
 # %%
-plt.plot(x_E, E_arr[700,:])
-plt.plot(x_B, B_arr[700,:])
-plt.show()
+fig = plt.figure() 
+ax = plt.axes(xlim=(x_min, x_max), ylim=(-2, 2))
+ax.set_xlabel("x")
+line_E, = ax.plot([], [], lw=2, label="E")
+line_B, = ax.plot([], [], lw=2, label="B")
+ax.legend(loc="upper right")
 
-# %%
-for n in range(0,N,100):
-    plt.figure(figsize=(8,6))
-    plt.title(f"n = {n:05d}/N")
-    plt.plot(x_E, E_arr[n,:], label="E_y")
-    plt.plot(x_B, B_arr[n,:], label="B_z")
-    plt.xlim(x_min, x_max)
-    plt.ylim(-2,2)
-    plt.xlabel("x")
-    plt.ylabel("amplitude")
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(f"animation/{n:05d}.png")
-    plt.close()
+frame_count = 200
+frame_stride  = 20
+assert(frame_count * frame_stride <= N)
 
-# %%
+def init():  
+    line_E.set_data([], [])
+    line_B.set_data([], []) 
+    return line_E, line_B 
+
+def animate(n):
+    if (n % 10 == 0): print(f"Rendering... ({100*((n+10)/frame_count):.1f}%)")
+    ax.set_title(f"t = {tau*n*frame_stride:.2f}")
+    line_E.set_data(x_E, E_arr[n*frame_stride,:])
+    line_B.set_data(x_E, B_arr[n*frame_stride,:])
+    return line_E, line_B
+
+anim = animation.FuncAnimation(
+	fig, animate, init_func=init, 
+	frames=frame_count, interval=20, blit=True) 
+
+anim.save('figures/movie.gif', writer='imagemagick')
+print("Rendering done!")

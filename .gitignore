@@ -1,5 +1,10 @@
 .vscode/
 
+*/data
+*/figures
+*/animations
+*/main
+
 # Prerequisites
 *.d
 

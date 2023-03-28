@@ -43,19 +43,33 @@ int main()
         B.head(M-1) = B.head(M-1) - (tau/h) * (E.tail(M-1) - E.head(M-1));
 
         // reflective boundary conditions
-        E.head(0) = 0;
-        B.tail(0) = 0;
+        //E.head(1) = 0;
+        //B.tail(1) = 0;
         
         // dampening boundary conditions (Z = 1)
-        // E.head(0) =  B.head(0);
-        // B.tail(0) = -E.tail(0);
+        //E.head(1) =  B.head(1);
+        //B.tail(1) = -E.tail(1);
+
+        // periodic boundary conditions
+        //E.head(1) = E.tail(1);
+        //B.tail(1) = B.head(1);
+
+        // antenna boundary condition left
+        // reflective boundary right
+        double A = 0.5;
+        double omega = 10; 
+        E.head(1) = A*sin(omega*n*tau);
+        B.tail(1) = 0;
 
         // save the current timestep
         E_arr.row(n) = E;
         B_arr.row(n) = B;
+        cout << "\rSimulating... " << n+1 << "/" << N;
     }
+    cout << "\n";
 
-    ofstream file("data/output_E.csv");
+    cout << "Writing files...\n";
+    ofstream file("data/output_E.csv", ios::trunc);
     if (file.is_open())
     {
         file << "# E field\n";
@@ -63,11 +77,12 @@ int main()
     }
     file.close();
 
-    file = ofstream("data/output_B.csv");
+    file = ofstream("data/output_B.csv", ios::trunc);
     if (file.is_open())
     {
         file << "# B field\n";
         file << B_arr << '\n';
     }
     file.close();
+    cout << "Done.\n";
 }

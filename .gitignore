@@ -1,8 +1,8 @@
 .vscode/
 
-*/data
-*/figures
-*/animations
+data/
+figures/
+animations/
 */main
 
 # Prerequisites

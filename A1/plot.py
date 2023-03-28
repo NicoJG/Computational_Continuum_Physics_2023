@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation 
 
 # %%
+print("Reading in data...")
 E_arr = np.genfromtxt("data/output_E.csv")
 B_arr = np.genfromtxt("data/output_B.csv")
 
@@ -19,6 +20,7 @@ x_E = np.linspace(x_min,       x_min + (M-1.0)*h, M)
 x_B = np.linspace(x_min+0.5*h, x_min + (M-0.5)*h, M)
 
 # %%
+print("Plotting...")
 fig = plt.figure() 
 ax = plt.axes(xlim=(x_min, x_max), ylim=(-2, 2))
 ax.set_xlabel("x")

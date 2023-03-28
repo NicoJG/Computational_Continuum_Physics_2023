@@ -38,28 +38,30 @@ int main()
     B_arr.row(0) = B;
 
     for (int n=1; n<N; n++) {
+
+        // Save values for Murs absorbing boundary condition
+
         // FD step
+        double E_old = E[1];
         E.tail(M-1) = E.tail(M-1) - (tau/h) * (B.tail(M-1) - B.head(M-1));
-        B.head(M-1) = B.head(M-1) - (tau/h) * (E.tail(M-1) - E.head(M-1));
-
-        // reflective boundary conditions
-        //E.head(1) = 0;
-        //B.tail(1) = 0;
         
-        // dampening boundary conditions (Z = 1)
-        //E.head(1) =  B.head(1);
-        //B.tail(1) = -E.tail(1);
+        // Boundary conditions for E field (left)
+        //E[0] = E_old+(tau-h)/(tau + h)*(E[1]-E[0]);     // absorbing
+        //E[0] = 0;                                       // reflective
+        //E[0] = E[M-1];                                  // periodic
 
-        // periodic boundary conditions
-        //E.head(1) = E.tail(1);
-        //B.tail(1) = B.head(1);
-
-        // antenna boundary condition left
-        // reflective boundary right
+        // Antenna
         double A = 0.5;
         double omega = 10; 
-        E.head(1) = A*sin(omega*n*tau);
-        B.tail(1) = 0;
+        E[0] = A*sin(omega*n*tau);
+
+        double B_old = B[M-2];
+        B.head(M-1) = B.head(M-1) - (tau/h) * (E.tail(M-1) - E.head(M-1));
+        
+        // Boundary conditions for B field (right)
+        B[M-1] = B_old+(tau-h)/(tau+h)*(B[M-2]-B[M-1]); // absorbing
+        //B[M-1] = 0;                                     // reflective        
+        //B[M-1] = B[0];                                  // periodic        
 
         // save the current timestep
         E_arr.row(n) = E;

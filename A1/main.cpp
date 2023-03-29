@@ -14,11 +14,20 @@ int main()
     double x_min = -1.;
     double x_max = 1.;
 
-    int N = 4000; // number of timesteps
+    double t_min = 0.;
+    double t_max = 5.;
+
+    int N = 3000; // number of timesteps
     int M = 1000; // number of spacesteps
     
     double h = (x_max - x_min) / (M - 0.5);
-    double tau = 0.5*h;
+    double tau = (t_max - t_min) / (N - 1);
+
+    // check if stability condition (sigma = tau/h < 1) is true
+    if (tau/h > 1) {
+        cerr << "ERROR! Method is instable: tau = " << tau << " h = " << h << "\n";
+        exit(1);
+    }
 
     ArrayXd E(M);
     ArrayXd B(M);
@@ -73,7 +82,7 @@ int main()
     ofstream file("data/output_E.csv", ios::trunc);
     if (file.is_open())
     {
-        file << "# E field\n";
+        file << "# E field (N rows, M columns)\n";
         file << E_arr << '\n';
     }
     file.close();
@@ -85,5 +94,23 @@ int main()
         file << B_arr << '\n';
     }
     file.close();
+
+    // print metadata for plotting
+    file = ofstream("data/output_constants.json", ios::trunc);
+    if (file.is_open())
+    {
+        file << "{\n";
+        file << "\"M\": " << M << ",\n";
+        file << "\"x_min\": " << x_min << ",\n";
+        file << "\"x_max\": " << x_max << ",\n";
+        file << "\"dx\": " << h << ",\n";
+        file << "\"N\": " << N << ",\n";
+        file << "\"t_min\": " << t_min << ",\n";
+        file << "\"t_max\": " << t_max << ",\n";
+        file << "\"dt\": " << tau << "\n";
+        file << "}\n";
+    }
+    file.close();
+
     cout << "Done.\n";
 }

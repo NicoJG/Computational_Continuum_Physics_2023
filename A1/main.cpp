@@ -10,10 +10,10 @@ int main()
     double x_max = 1.;
 
     double t_min = 0.;
-    double t_max = 4.;
+    double t_max = 2.5;
 
     int N = 10000; // number of timesteps
-    int M = 2000; // number of spacesteps
+    int M = 3000; // number of spacesteps
     
     double h = (x_max - x_min) / (M - 0.5);
     double tau = (t_max - t_min) / (N - 1);
@@ -39,11 +39,14 @@ int main()
     // initial conditions:
     for (int m=0; m<M; m++) {
         // Gaussian wave packet:
-        E[m] = abs(x_E[m])<0.3 ? exp(-x_E[m]*x_E[m]/(2*0.1*0.1))*sin(20 * M_PI * x_E[m]) : 0;
-        B[m] = abs(x_B[m])<0.3 ? exp(-x_B[m]*x_B[m]/(2*0.1*0.1))*sin(20 * M_PI * x_B[m]) : 0;
+        //E[m] = abs(x_E[m])<0.3 ? exp(-x_E[m]*x_E[m]/(2*0.1*0.1))*sin(20 * M_PI * x_E[m]) : 0;
+        //B[m] = abs(x_B[m])<0.3 ? exp(-x_B[m]*x_B[m]/(2*0.1*0.1))*sin(20 * M_PI * x_B[m]) : 0;
         // Sine wave packet
-        //E[m] = abs(x_E[m])<0.3 ? sin(20 * M_PI * x_E[m]) : 0;
-        //B[m] = abs(x_B[m])<0.3 ? sin(20 * M_PI * x_B[m]) : 0;
+        //E[m] = abs(x_E[m])<0.1 ? sin(20 * M_PI * x_E[m]) : 0;
+        //B[m] = abs(x_B[m])<0.1 ? sin(20 * M_PI * x_B[m]) : 0;
+        // Nothing
+        E[m] = 0;
+        B[m] = 0;
     }
 
     // write header and initial conditions to the output file
@@ -73,10 +76,13 @@ int main()
         }
         
         // Boundary conditions for E field (left)
-        //E[0] = E_old[1]+(tau-h)/(tau + h)*(E[1]-E[0]);   // absorbing
+        E[0] = E_old[1]+(tau-h)/(tau + h)*(E[1]-E[0]);   // absorbing
         //E[0] = 0;                                       // reflective
         //E[0] = E[M-1];                                  // periodic
-        E[0] = 0.5 * sin(10 * n * tau);                 // antenna
+        //E[0] = 0.5 * sin(10 * n * tau);                 // antenna
+
+        // antenna in the middle
+        E[M/2] = sin(20 * n * tau);
 
         // FD step B
         for (int m=0; m<M-1; m++) {
@@ -84,10 +90,10 @@ int main()
         }
         
         // Boundary conditions for B field (right)
-        //B[M-1] = B_old[M-2]+(tau-h)/(tau+h)*(B[M-2]-B[M-1]); // absorbing
+        B[M-1] = B_old[M-2]+(tau-h)/(tau+h)*(B[M-2]-B[M-1]); // absorbing
         //B[M-1] = 0;                                     // reflective        
         //B[M-1] = B[0];                                  // periodic
-        B[M-1] = 0.5 * sin(10 * n * tau);                 // antenna        
+        //B[M-1] = 0.5 * sin(10 * n * tau);                 // antenna        
 
         // save the current timestep in regular intervals
         if (((n+1) % frame_stride == 0) || (n==(N-1))) {   

@@ -80,7 +80,7 @@ def animate(frame_idx):
 
 anim = animation.FuncAnimation(
 	fig, animate, init_func=init, 
-	frames=frame_count, interval=20, blit=True) 
+	frames=frame_count, interval=20, blit=True)
 
 anim.save('figures/movie.gif', writer='imagemagick')
 print("\nRendering done!")

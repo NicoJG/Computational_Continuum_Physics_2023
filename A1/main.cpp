@@ -63,7 +63,7 @@ int main()
     file.close();
     cout << "\rSimulating... " << 1 << "/" << N;
 
-    for (int n=1; n<N; n++) {
+    for (int n=1; n<0; n++) {
         // copy arrays
         for (int m=0; m<M; m++) {
             E_old[m] = E[m];

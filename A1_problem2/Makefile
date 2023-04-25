@@ -6,6 +6,7 @@ all:
 	g++ $(FLAGS) main.cpp -o main
 	rm -f data/*.csv
 	rm -f figures/*.png
+	rm -f figures/*.gif
 	./main
 	python plot.py
 

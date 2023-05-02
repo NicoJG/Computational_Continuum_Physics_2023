@@ -11,7 +11,6 @@ all:
 	rm -f figures/*.png
 	rm -f figures/*.gif
 	./main
-	python3 plot_spectrum.py
 
 cpp11:
 	mkdir -p data figures 
@@ -20,7 +19,6 @@ cpp11:
 	rm -f figures/*.png
 	rm -f figures/*.gif
 	./main
-	python3 plot_spectrum.py
 
 fftw_test: fftw_test.cpp
 	g++-11 $(FLAGS) fftw_test.cpp -o fftw_test

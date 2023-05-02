@@ -13,11 +13,6 @@ double V(double x, double y) {
     return - 5. / pow(1. + (x/5.)*(x/5.) + (y/4.)*(y/4.), 4.);
 }
 
-//double d = 1. / M_PI;
-//double V(double x, double y) {
-//    return (x*x+y*y)/(d*d);
-//}
-
 int main()
 {
     // Grid resolution
@@ -34,11 +29,11 @@ int main()
     // Time grid
     double t_min = 0;
     double t_max = 1000;
-    const int N  = 100000;
+    const int N  = 10000;
     double tau   = (t_max - t_min) / N;
 
-    // For saving frames
-    int frames = 10;
+    // For saving snapshots of wavefunction to plotting
+    int frames = 10; // Number of frames excluding initial
     int frame_stride = N/frames;
 
     // Real space coordinates
@@ -65,7 +60,6 @@ int main()
     int m_y_0p0 = round((L+0.0)/(2*L) * M);
     printf("Storing wavefunction at (x,y) = (%.5f,%.5f)\n", 
             x[m_x_0p1], y[m_y_0p0]);
-    
     complex<double> *psi_over_time     = new complex<double>[N];
     complex<double> *psi_time_spectrum = new complex<double>[N];
 
@@ -92,7 +86,6 @@ int main()
     // initial wave function
     for (int m_x=0; m_x<M; m_x++)
     for (int m_y=0; m_y<M; m_y++) {
-        //psi_r[m_x][m_y] = exp(-(x[m_x]*x[m_x]+y[m_y]*y[m_y])/(2*d));
         double x_shift = 1.;
         double y_shift = 1.;
         psi_r[m_x][m_y] = exp(-(x[m_x]-x_shift)*(x[m_x]-x_shift) - (y[m_y]-y_shift)*(y[m_y]-y_shift)) / sqrt(M_PI);
@@ -166,6 +159,7 @@ int main()
     fftw_execute(transform_t_to_omega);
     fftw_destroy_plan(transform_t_to_omega);
 
+    // Save wavefunction at a point and spectrum
     printf("Saving to file\n");
     sprintf(filename, "data/psi_time_and_frequency.csv");
     f = fopen(filename, "w");
@@ -181,7 +175,6 @@ int main()
         );
     }
     fclose(f);
-
 
     fftw_destroy_plan(transform_r_to_k);
     fftw_destroy_plan(transform_k_to_r);

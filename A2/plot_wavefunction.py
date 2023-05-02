@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import os
 import matplotlib.animation as animation 
 
+# Potential to plot level curves for
 def V(x, y):
     return -5 / (1 + (x/5)**2 + (y/4)**2)**4
 
@@ -28,10 +29,10 @@ for (i, file) in enumerate(listing):
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
     ax.set_aspect("equal")
-    im = ax.pcolormesh(X, Y, psi, vmin=-clim, vmax=clim, cmap=cmap)
+    im = ax.pcolormesh(X, Y, psi, vmin=-clim, vmax=clim, cmap=cmap, rasterized=True)
     ax.contour(X, Y, V(X,Y), colors="black", linestyles="solid", alpha=0.2, levels=[-4, -3, -2, -1])
     fig.colorbar(im, ax=ax)
-    fig.savefig("figures/" + file.split(".")[0] + "." + file.split(".")[1]  + ".png")
+    fig.savefig("figures/" + file.split(".")[0] + "." + file.split(".")[1]  + ".pdf")
 
     plt.close(fig)
 

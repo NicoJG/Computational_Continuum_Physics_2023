@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 #})
 
 # Figure setup
-fig = plt.figure(figsize=(7,4))
+fig = plt.figure(figsize=(6.6,4))  # textwidth in report is 6.6 inches
 ax = fig.add_subplot(1,1,1)
 
 # Iterate over data files

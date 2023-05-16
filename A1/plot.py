@@ -5,11 +5,11 @@ import matplotlib.animation as animation
 import json
 
 # For latex interpretation of the figures
-plt.rcParams.update({
-    "text.usetex": True,
-    "font.family": "Computer Modern",
-    "font.size": 11.0, # 11pt is fontsize of captions in the report
-})
+# plt.rcParams.update({
+#     "text.usetex": True,
+#     "font.family": "Computer Modern",
+#     "font.size": 11.0, # 11pt is fontsize of captions in the report
+# })
 
 # %%
 print("Reading in data...")

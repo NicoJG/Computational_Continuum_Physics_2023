@@ -9,9 +9,20 @@ using namespace std;
 // complex number i = sqrt(-1)
 const complex<double> i(0.0, 1.0);
 
-double V(double x, double y) {
-    return - 5. / pow(1. + (x/5.)*(x/5.) + (y/4.)*(y/4.), 4.);
+// Given potential and wavefunction for task
+//double V(double x, double y)    {
+//    return - 5. / pow(1. + (x/5.)*(x/5.) + (y/4.)*(y/4.), 4.);
+//}
+
+// Test with harmonic oscillator
+double V(double x, double y) { 
+    return (x*x + y*y) / 4; 
 }
+
+complex<double> psi0(double x, double y) {
+    return exp(-(x-1.)*(x-1.) - (y-1.)*(y-1.)) / sqrt(M_PI);
+}
+
 
 int main()
 {
@@ -85,11 +96,8 @@ int main()
 
     // initial wave function
     for (int m_x=0; m_x<M; m_x++)
-    for (int m_y=0; m_y<M; m_y++) {
-        double x_shift = 1.;
-        double y_shift = 1.;
-        psi_r[m_x][m_y] = exp(-(x[m_x]-x_shift)*(x[m_x]-x_shift) - (y[m_y]-y_shift)*(y[m_y]-y_shift)) / sqrt(M_PI);
-    }
+    for (int m_y=0; m_y<M; m_y++)
+        psi_r[m_x][m_y] = psi0(x[m_x], y[m_y]);
 
     // Save initial wavefunction
     char filename[100];

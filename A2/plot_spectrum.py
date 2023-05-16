@@ -2,19 +2,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # For latex interpretation of the figures
-plt.rcParams.update({
-    "text.usetex": True,
-    "font.family": "Computer Modern",
-    "font.size": 11.0, # 11pt is fontsize of captions in the report
-})
+#plt.rcParams.update({
+#    "text.usetex": True,
+#    "font.family": "Computer Modern",
+#    "font.size": 11.0, # 11pt is fontsize of captions in the report
+#})
 
 # Figure setup
 fig = plt.figure(figsize=(7,4))
 ax = fig.add_subplot(1,1,1)
 
 # Iterate over data files
-files = ["saved_data/psi_time_and_frequency_tmax=100_N=1000.csv",
-        "saved_data/psi_time_and_frequency_tmax=1000_N=10000.csv"]
+files = ["saved_data/psi_time_and_frequency_harmonic.csv"]
 for i, filename in enumerate(files):
 
     # Extract data
@@ -35,8 +34,8 @@ for i, filename in enumerate(files):
 # Final figure formatting
 ax.set_xlabel("$\omega$")
 ax.set_ylabel("$\psi(0.1, 0, \omega)$")
-ax.set_xlim(-1, 5)
-ax.legend()
+ax.set_xlim(-10, 2)
+#ax.legend()
 ax.grid(which="both", axis="x")
 ax.grid(axis="y")
 ax.minorticks_on()

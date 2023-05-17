@@ -12,7 +12,7 @@ int main()
     // Space discretization
     double x_min = -1.0;
     double x_max = 1.0;
-    const int M = 1000; // Number of grid points for E
+    const int M = 500; // Number of grid points for E
     double h = (x_max - x_min) / M;
 
     // Time discretization
@@ -23,7 +23,7 @@ int main()
 
 
     // For storing snapshots of fields
-    int frame_count  = 100;
+    int frame_count  = 25;
     int frame_stride = N / frame_count;
 
     // check if stability condition (sigma = tau/h < 1) is true
@@ -56,12 +56,12 @@ int main()
         //B[m] = abs(x_B[m]+x_shift)<0.3 ? exp(-x_B[m]*(x_B[m]+x_shift)/(2*0.1*0.1))*sin(20 * M_PI * (x_B[m]+x_shift)) : 0;
         
         // Sine wave packet
-        E[m] = abs(x_E[m])<0.1 ? sin(20 * M_PI * x_E[m]) : 0;
-        B[m] = abs(x_B[m]+x_shift)<0.1 ? sin(20 * M_PI * (x_B[m]+x_shift)) : 0;
+        //E[m] = abs(x_E[m])<0.1 ? sin(20 * M_PI * x_E[m]) : 0;
+        //B[m] = abs(x_B[m]+x_shift)<0.1 ? sin(20 * M_PI * (x_B[m]+x_shift)) : 0;
         
         // Nothing
-        //E[m] = 0;
-        //B[m] = 0;
+        E[m] = 0;
+        B[m] = 0;
     }
 
     // write header and initial conditions to the output file
@@ -89,13 +89,13 @@ int main()
             B[m] = B_old[m] - (tau/h) * (E_old[m+1] - E_old[m]);
 
         // FD step E
-        for (int m=1; m<M; m++)
+        for (int m=1; m<M-1; m++)
             E[m] = E_old[m] - (tau/h) * (B[m] - B[m-1]);
         
         // Boundary conditions on the left
         //E[0] = E_old[1] + (tau-h)/(tau + h) * (E[1]-E[0]);    // absorbing
         E[0] = 0;                                             // reflective
-        //E[0] = E[M-1];                                        // periodic
+        //E[0] = E_old[0] - (tau/h) * (B[0] - B[M-2]);          // periodic
         //E[0] = 0.5 * sin(10 * n * tau);                       // antenna
 
         // Boundary conditions on the right
@@ -105,7 +105,7 @@ int main()
         //E[M-1] = 0.5 * sin(10 * n * tau);                         // antenna     
 
         // antenna in the middle
-        // E[M/2] = sin(20 * n * tau);
+        //E[M/2] = sin(20 * n * tau);
 
         // save the current timestep in regular intervals
         if (((n+1) % frame_stride == 0) || (n==(N-1))) {   

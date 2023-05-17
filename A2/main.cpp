@@ -10,14 +10,14 @@ using namespace std;
 const complex<double> i(0.0, 1.0);
 
 // Given potential and wavefunction for task
-//double V(double x, double y)    {
-//    return - 5. / pow(1. + (x/5.)*(x/5.) + (y/4.)*(y/4.), 4.);
-//}
+double V(double x, double y)    {
+    return - 5. / pow(1. + (x/5.)*(x/5.) + (y/4.)*(y/4.), 4.);
+}
 
 // Test with harmonic oscillator
-double V(double x, double y) { 
-    return (x*x + y*y) / 4; 
-}
+//double V(double x, double y) { 
+//    return (x*x + y*y) / 4; 
+//}
 
 complex<double> psi0(double x, double y) {
     return exp(-(x-1.)*(x-1.) - (y-1.)*(y-1.)) / sqrt(M_PI);
@@ -39,8 +39,8 @@ int main()
 
     // Time grid
     double t_min = 0;
-    double t_max = 1000;
-    const int N  = 10000;
+    double t_max = 100;
+    const int N  = 1000;
     double tau   = (t_max - t_min) / N;
 
     // For saving snapshots of wavefunction to plotting
@@ -50,8 +50,8 @@ int main()
     // Real space coordinates
     double x[M], y[M];
     for (int m=0; m<M; m++) {
-        x[m] = -L + dx * m;
-        y[m] = -L + dx * m;
+        x[m] = -L + dx * (m + 0.5);
+        y[m] = -L + dx * (m + 0.5);
     }
 
     // Fourier space coordinates
@@ -67,8 +67,8 @@ int main()
     }
 
     // For saving value of wave function over time
-    int m_x_0p1 = round((L+0.1)/(2*L) * M);
-    int m_y_0p0 = round((L+0.0)/(2*L) * M);
+    int m_x_0p1 = round((L+0.1)/(2*L) * M)-1;
+    int m_y_0p0 = round((L+0.0)/(2*L) * M)-1;
     printf("Storing wavefunction at (x,y) = (%.5f,%.5f)\n", 
             x[m_x_0p1], y[m_y_0p0]);
     complex<double> *psi_over_time     = new complex<double>[N];
